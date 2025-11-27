@@ -1,0 +1,30 @@
+{
+  "name": "city-problem-map",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vladbelyaevvv/City-problem-map.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vladbelyaevvv/City-problem-map/issues"
+  },
+  "homepage": "https://github.com/vladbelyaevvv/City-problem-map#readme",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "frontend-admin",
+    "ui-lib"
+  ],
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}

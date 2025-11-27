@@ -1,0 +1,22 @@
+.btn {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: aqua;
+    color: white;
+}
+.btn-primary:hover{
+    background-color: rgb(12, 129, 129);
+}
+
+.btn-secondary {
+    background-color: rgb(185, 176, 176);
+    color: black;
+}
+.btn-secondary:hover{
+    background-color: rgb(82, 79, 79);;
+}

@@ -105,10 +105,10 @@ ui-lib/
 | react ^19.2.0, react-dom ^19.2.0 | UI |
 | typescript ~5.9.3 | язык разработки |
 | vite ^7.2.4 | сборщик |
-| react-router-dom | маршрутизация |
+| react-router-dom ^7.10.1 | маршрутизация |
 | @iminside/react-yandex-maps ^1.2.7 | карта |
 | eslint ^9.39.1 | линтер |
-| jest | тестирование |
+| jest ^30.2.0 | тестирование |
 
 React и react-dom находятся в root workspace и подключаются как peerDependencies в ui-lib.
 

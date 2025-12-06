@@ -6,15 +6,15 @@ export interface HeaderProps{
 }
 
 export function Header(props: HeaderProps){
-    const {title, nav} = props
+  const {title, nav} = props
 
-    return (
-        <header>
-            <div className="header-title">{title}</div>
-            <nav className="header-nav">
-                {nav.map((item)=>
-                <a key={item.href} href={item.href}>{item.label} </a>)}
-            </nav>
-        </header>
-    )
+  return (
+    <header>
+      <div className="header-title">{title}</div>
+      <nav className="header-nav">
+        {nav.map((item)=>
+          <a key={item.href} href={item.href}>{item.label} </a>)}
+      </nav>
+    </header>
+  )
 }

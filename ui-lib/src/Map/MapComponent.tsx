@@ -1,7 +1,8 @@
-import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps'
 import { useState, useMemo } from 'react'
 
-export type LatLng = number[]
+import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps'
+
+export type LatLng = [number, number]
 
 export type Marker = {
   id: string

@@ -1,10 +1,11 @@
-import { Button } from "./Button/Button"
-import { Input } from "./Input/Input"
-import { Card } from "./Card/Card"
-import { Header } from "./Header/Header"
-import { Footer } from "./Footer/Footer"
-import { MapComponent } from "./Map/MapComponent"
 import { useState } from "react"
+
+import { Button } from "./Button/Button"
+import { Card } from "./Card/Card"
+import { Footer } from "./Footer/Footer"
+import { Header } from "./Header/Header"
+import { Input } from "./Input/Input"
+import { MapComponent } from "./Map/MapComponent"
 
 export function Demo() {
   const [title, setTitle] = useState("")
@@ -37,9 +38,9 @@ export function Demo() {
 
         <Card>Карточка</Card>
         <MapComponent
-            startPosition={[55.820784, 49.136045]}
-            markers={[]}
-            onMapClick={(coords)=> console.log("Клик по карте:", coords)}
+          startPosition={[55.820784, 49.136045]}
+          markers={[]}
+          onMapClick={(coords)=> console.log("Клик по карте:", coords)}
         />
         <Footer></Footer>
       </div>

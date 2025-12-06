@@ -8,20 +8,20 @@ export interface InputProps {
 }
 
 export function Input(props: InputProps){
-    const{
-        value,
-        onChange,
-        placeholder,
-        type = "text",
-    } = props
+  const{
+    value,
+    onChange,
+    placeholder,
+    type = "text",
+  } = props
 
-    return (
-        <input
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            placeholder={placeholder}
-            type={type}
-            className="input"
-        />
-    )
+  return (
+    <input
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      type={type}
+      className="input"
+    />
+  )
 }

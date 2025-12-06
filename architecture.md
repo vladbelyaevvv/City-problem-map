@@ -102,12 +102,12 @@ ui-lib/
 ### Общие зависимости
 | Библиотека | Назначение |
 |-----------|------------|
-| react, react-dom | UI |
-| typescript | язык разработки |
-| vite | сборщик |
+| react ^19.2.0, react-dom ^19.2.0 | UI |
+| typescript ~5.9.3 | язык разработки |
+| vite ^7.2.4 | сборщик |
 | react-router-dom | маршрутизация |
-| @iminside/react-yandex-maps | карта |
-| eslint | линтер |
+| @iminside/react-yandex-maps ^1.2.7 | карта |
+| eslint ^9.39.1 | линтер |
 | jest | тестирование |
 
 React и react-dom находятся в root workspace и подключаются как peerDependencies в ui-lib.

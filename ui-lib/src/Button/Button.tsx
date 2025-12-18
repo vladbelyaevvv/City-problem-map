@@ -1,26 +1,26 @@
-import type { ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import './Button.css'
 
-export interface ButtonProps {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
     children: ReactNode
-    onClick?: () => void
-    type?: "button" | "submit" | "reset"
     variant?: "primary" | "secondary" | "danger"
 }
 
 export function Button(props: ButtonProps){
   const{
     children,
-    onClick,
-    type = "button",
     variant = "primary",
+    className = "",
+    style,
+    ...rest
   } = props
 
   return (
     <button 
-      type ={type}
-      onClick={onClick}
-      className={`btn btn-${variant}`}>
+      className={`btn btn-${variant} ${className}`}
+      style={style}
+      {...rest}
+    >
       {children}
     </button>
   )

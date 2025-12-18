@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useRef } from 'react'
 import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps'
 
 export type LatLng = [number, number]
@@ -22,6 +22,20 @@ export interface MapProps {
   tempMarkerPosition?: LatLng | null
 }
 
+interface YMapInstance {
+  getCenter: () => LatLng;
+  getZoom: () => number;
+}
+
+interface YMapEvent {
+  // get позовляет достать координаты клика
+  get: (key: 'coords') => LatLng; 
+  // тут лежит ссылка на карту
+  originalEvent: {
+    map: YMapInstance;
+  };
+}
+
 export function MapComponent(props: MapProps) {
   const {
     startPosition,
@@ -34,15 +48,17 @@ export function MapComponent(props: MapProps) {
     tempMarkerPosition
   } = props
 
-  const [currentZoom, setCurrentZoom] = useState(zoom)
-
-  const mapState = useMemo(() => ({
+  const [mapState, setMapState] = useState({
     center: startPosition,
-    zoom: currentZoom
-  }), [startPosition, currentZoom])
+    zoom: zoom,
+    controls: [] as string[] 
+  });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type YMapClickEvent = any; 
+  const handleZoom = (delta: number) => {
+    setMapState(prev => ({ ...prev, zoom: prev.zoom + delta }));
+  };
+  
+  const mapRef = useRef<YMapInstance | null>(null);
 
   return (
     <div style={{ width, height, position: "relative", borderRadius: "12px", overflow: "hidden", border: "1px solid #e1e1e3" }}>
@@ -56,21 +72,25 @@ export function MapComponent(props: MapProps) {
         gap: 5
       }}>
         <button 
-          onClick={() => setCurrentZoom(z => z + 1)}
+          type="button"
+          onClick={() => handleZoom(1)}
           style={{
             width: 32, height: 32, borderRadius: 6, border: "none", 
             background: "white", boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-            cursor: "pointer", fontSize: 18, fontWeight: "bold", color: "#333"
+            cursor: "pointer", fontSize: 18, fontWeight: "bold", color: "#333",
+            display: "flex", alignItems: "center", justifyContent: "center"
           }}
         >
           +
         </button>
         <button 
-          onClick={() => setCurrentZoom(z => z - 1)}
+          type="button"
+          onClick={() => handleZoom(-1)}
           style={{
             width: 32, height: 32, borderRadius: 6, border: "none", 
             background: "white", boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-            cursor: "pointer", fontSize: 18, fontWeight: "bold", color: "#333"
+            cursor: "pointer", fontSize: 18, fontWeight: "bold", color: "#333",
+            display: "flex", alignItems: "center", justifyContent: "center"
           }}
         >
           -
@@ -82,9 +102,23 @@ export function MapComponent(props: MapProps) {
           state={mapState}
           width="100%"
           height="100%"
-          onClick={(e: YMapClickEvent) => {
-            const coords = e.get("coords")
-            onMapClick?.(coords)
+          
+          instanceRef={(ref) => { 
+            if (ref) mapRef.current = ref as unknown as YMapInstance; 
+          }}
+
+          onBoundsChange={(e: unknown) => {
+             const event = e as YMapEvent;
+             const newCenter = event.originalEvent.map.getCenter();
+             const newZoom = event.originalEvent.map.getZoom();
+             
+             setMapState(prev => ({ ...prev, center: newCenter, zoom: newZoom }));
+          }}
+
+          onClick={(e: unknown) => {
+            const event = e as YMapEvent;
+            const coords = event.get("coords");
+            onMapClick?.(coords);
           }}
         >
           {markers.map((m) => (

@@ -1,27 +1,43 @@
-header {
+.header {
+    position: sticky; /* Фиксирует шапку при скролле */
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.85); /* Полупрозрачность */
+    backdrop-filter: blur(10px); /* Эффект размытия фона */
+    border-bottom: 1px solid #e1e1e3;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 60px; /* Фиксированная высота */
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    background-color: rgb(231, 229, 229);
-    border-bottom: 2px solid #ccc;
 }
 
-.header-title{
-    font-size:16px;
-    font-weight: bold;
+.header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    cursor: pointer;
 }
 
-.header-nav{
+.header-nav {
     display: flex;
-    gap: 15px;
+    gap: 20px;
 }
 
-.header-nav a{
-    text-decoration: none;
-    color: black;
+.header-link {
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    transition: color 0.2s;
 }
 
-.header-nav a:hover{
-    text-decoration: underline;
+.header-link:hover {
+    color: #007aff; /* Цвет при наведении */
 }

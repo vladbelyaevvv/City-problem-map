@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
-import { Card } from "ui-lib";
-import { loadEvents, CityEvent } from "../utils/storage";
+import { useEffect, useState } from "react"
+
+import { Card } from "ui-lib"
+
+import { loadEvents, CityEvent } from "../utils/storage"
 
 export function AdminStatsPage() {
-  const [events, setEvents] = useState<CityEvent[]>([]);
+  const [events, setEvents] = useState<CityEvent[]>([])
 
   useEffect(() => {
-    setEvents(loadEvents());
-  }, []);
+    setEvents(loadEvents())
+  }, [])
 
-  const total = events.length;
-  const done = events.filter(e => e.status === 'done').length;
-  const inProgress = events.filter(e => e.status === 'in_progress').length;
-  const newEvents = events.filter(e => e.status === 'new').length;
+  const total = events.length
+  const done = events.filter(e => e.status === 'done').length
+  const inProgress = events.filter(e => e.status === 'in_progress').length
+  const newEvents = events.filter(e => e.status === 'new').length
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24, padding: 20 }}>
@@ -40,5 +42,5 @@ export function AdminStatsPage() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

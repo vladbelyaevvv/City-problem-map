@@ -1,5 +1,6 @@
-import { Button, Card } from "ui-lib";
-import type { CityEvent, EventStatus } from "../utils/storage";
+import { Button, Card } from "ui-lib"
+
+import type { CityEvent, EventStatus } from "../utils/storage"
 
 interface AdminEventDetailsProps {
   event: CityEvent;
@@ -12,7 +13,7 @@ const STATUS_OPTIONS: { value: EventStatus; label: string }[] = [
   { value: "new", label: "Новое" },
   { value: "in_progress", label: "В работе" },
   { value: "done", label: "Выполнено" },
-];
+]
 
 export function AdminEventDetails({ event, onStatusChange, onDelete, onClose }: AdminEventDetailsProps) {
   return (
@@ -71,5 +72,5 @@ export function AdminEventDetails({ event, onStatusChange, onDelete, onClose }: 
         </Button>
       </div>
     </Card>
-  );
+  )
 }

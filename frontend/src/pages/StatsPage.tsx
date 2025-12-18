@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react"
+
 import { Card } from "ui-lib"
-import type { CityEvent, EventType } from "../utils/storage"
+
 import { loadEvents } from "../utils/storage"
+
+import type { CityEvent, EventType } from "../utils/storage"
 
 const TYPE_COLORS = {
   water: "#3b82f6",
@@ -52,7 +55,7 @@ export function StatsPage() {
         gap: "20px"
       }}>
         <h2>Статистика</h2>
-          <Card>
+        <Card>
           <h3 style={{marginBottom: 16}}>Общая статистика</h3>
           <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 16}}>
             <div style={{textAlign: "center"}}>
@@ -73,12 +76,12 @@ export function StatsPage() {
                   borderRadius: "50%", 
                   backgroundColor: TYPE_COLORS[type as keyof typeof TYPE_COLORS]
                 }} />
-                  <div style={{fontWeight: 600, marginBottom: 4}}>
-                    {type === "water" ? "Вода" : 
+                <div style={{fontWeight: 600, marginBottom: 4}}>
+                  {type === "water" ? "Вода" : 
                     type === "heating" ? "Отопление" : 
-                    type === "electricity" ? "Электричество" : "Другое"}
-                  </div>
-                  <div style={{fontSize: "1.2em", fontWeight: "bold"}}>{count}</div>
+                      type === "electricity" ? "Электричество" : "Другое"}
+                </div>
+                <div style={{fontSize: "1.2em", fontWeight: "bold"}}>{count}</div>
               </div>
             ))}
           </div>
@@ -92,7 +95,7 @@ export function StatsPage() {
                   fontSize: "1.5em", 
                   fontWeight: "bold",
                   color: status === "new" ? "#f59e0b" : 
-                        status === "in-progress" ? "#3b82f6" : "#10b981"
+                    status === "in-progress" ? "#3b82f6" : "#10b981"
                 }}>
                   {count}
                 </div>

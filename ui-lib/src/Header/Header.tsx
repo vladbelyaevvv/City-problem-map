@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import './Header.css';
+import { Link } from "react-router-dom"
+import './Header.css'
 
 export interface HeaderProps {
   title: string;
@@ -7,7 +7,7 @@ export interface HeaderProps {
 }
 
 export function Header(props: HeaderProps) {
-  const { title, nav } = props;
+  const { title, nav } = props
 
   return (
     <header className="header">
@@ -22,5 +22,5 @@ export function Header(props: HeaderProps) {
         </nav>
       </div>
     </header>
-  );
+  )
 }

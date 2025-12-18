@@ -1,6 +1,8 @@
-import { Button, Card, Input } from "ui-lib";
-import { useState } from "react";
-import type { CityEvent } from "../utils/storage";
+import { useState } from "react"
+
+import { Button, Card, Input } from "ui-lib"
+
+import type { CityEvent } from "../utils/storage"
 
 interface EventFormProps {
   point: [number, number] | null;
@@ -9,14 +11,14 @@ interface EventFormProps {
 }
 
 export function EventForm({ point, onSave, onCancel }: EventFormProps) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [type, setType] = useState<CityEvent["type"]>("other");
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [type, setType] = useState<CityEvent["type"]>("other")
 
   const handleSave = () => {
-    if (!title.trim()) return;
-    onSave(title, description, type);
-  };
+    if (!title.trim()) return
+    onSave(title, description, type)
+  }
 
   return (
     <Card>
@@ -47,5 +49,5 @@ export function EventForm({ point, onSave, onCancel }: EventFormProps) {
         <Button variant="secondary" onClick={onCancel}>Отмена</Button>
       </div>
     </Card>
-  );
+  )
 }

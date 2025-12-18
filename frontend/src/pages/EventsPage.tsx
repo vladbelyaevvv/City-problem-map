@@ -1,16 +1,19 @@
 import { useEffect, useState, useMemo } from "react"
+
 import { MapComponent, Button, Card } from "ui-lib"
-import type { CityEvent } from "../utils/storage"
-import { loadEvents, saveEvents } from "../utils/storage"
+
 import { EventForm } from "../components/EventForm"
 import { EventList } from "../components/EventList"
+import { loadEvents, saveEvents } from "../utils/storage"
+
+import type { CityEvent } from "../utils/storage"
 
 const TYPE_COLORS = {
   water: "#3b82f6",       
   heating: "#ef4444",     
   electricity: "#eab308", 
   other: "#9ca3af"        
-};
+}
 
 export function EventsPage() {
   const [point, setPoint] = useState<[number, number] | null>(null)
@@ -20,24 +23,24 @@ export function EventsPage() {
   const [events, setEvents] = useState<CityEvent[]>([])
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [filterType, setFilterType] = useState<CityEvent["type"] | "all">("all")
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null)
 
   useEffect(() => {
     setEvents(loadEvents())
   }, [])
   
   const handleEventSelect = (id: string) => {
-    setSelectedEventId(id);
+    setSelectedEventId(id)
     // Скролл к элементу списка
     setTimeout(() => {
-       const listItem = document.getElementById(`event-item-${id}`);
-       listItem?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  };
+      const listItem = document.getElementById(`event-item-${id}`)
+      listItem?.scrollIntoView({ behavior: "smooth", block: "center" })
+    }, 100)
+  }
 
   const filteredEvents = useMemo(() => {
-     return filterType === "all" ? events : events.filter((e) => e.type === filterType)
-  }, [filterType, events]);
+    return filterType === "all" ? events : events.filter((e) => e.type === filterType)
+  }, [filterType, events])
 
   const markers = useMemo(() => {
     return filteredEvents.map((e) => ({
@@ -46,10 +49,10 @@ export function EventsPage() {
       position: e.position,
       title: e.title,
       color: selectedEventId === e.id 
-             ? "#000000" // цвет выбранного маркера
-             : (TYPE_COLORS[e.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.other)
+        ? "#000000" // цвет выбранного маркера
+        : (TYPE_COLORS[e.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.other)
     }))
-  }, [filteredEvents, selectedEventId]);
+  }, [filteredEvents, selectedEventId])
 
   // Функция сохранения теперь принимает данные из формы
   function handleSave(title: string, description: string, type: CityEvent["type"]) {
@@ -103,7 +106,7 @@ export function EventsPage() {
             onMapClick={(coords) => {
               setIsFormOpen(true)
               setPoint(coords)
-              setSelectedEventId(null);
+              setSelectedEventId(null)
             }}
             onMarkerClick={(id) => handleEventSelect(id)}
             height="100%" 
@@ -115,23 +118,23 @@ export function EventsPage() {
           
           {/* Кнопка добавления (если форма закрыта) */}
           {!isFormOpen && (
-             <Button
-                variant="primary"
-                onClick={() => {
-                  setIsFormOpen(true)
-                  setPoint(null) // Сбрасываем точку, чтобы пользователь выбрал новую
-                }}
-              >
+            <Button
+              variant="primary"
+              onClick={() => {
+                setIsFormOpen(true)
+                setPoint(null) // Сбрасываем точку, чтобы пользователь выбрал новую
+              }}
+            >
                 Добавить событие
-              </Button>
+            </Button>
           )}
           
           {/* Форма добавления */}
           {isFormOpen && (
             <EventForm 
-                point={point}
-                onSave={handleSave}
-                onCancel={handleCancel}
+              point={point}
+              onSave={handleSave}
+              onCancel={handleCancel}
             />
           )}
 
@@ -140,16 +143,16 @@ export function EventsPage() {
             <h3>Фильтр по типу</h3>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {(["all", "water", "heating", "electricity", "other"] as const).map(ft => (
-                  <Button
-                    key={ft}
-                    variant={filterType === ft ? "primary" : "secondary"}
-                    onClick={() => setFilterType(ft)}
-                  >
-                    {ft === "all" ? "Все" : 
-                     ft === "water" ? "Вода" : 
-                     ft === "heating" ? "Отопление" : 
-                     ft === "electricity" ? "Электричество" : "Другое"}
-                  </Button>
+                <Button
+                  key={ft}
+                  variant={filterType === ft ? "primary" : "secondary"}
+                  onClick={() => setFilterType(ft)}
+                >
+                  {ft === "all" ? "Все" : 
+                    ft === "water" ? "Вода" : 
+                      ft === "heating" ? "Отопление" : 
+                        ft === "electricity" ? "Электричество" : "Другое"}
+                </Button>
               ))}
             </div>
           </Card>

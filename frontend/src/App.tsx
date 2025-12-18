@@ -1,17 +1,17 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Header } from "../../ui-lib/src/Header/Header";
-import { Footer } from "../../ui-lib/src/Footer/Footer"; 
-import { AboutPage } from "./pages/AboutPage";
-import { EventsPage } from "./pages/EventsPage";
-import { StatsPage } from "./pages/StatsPage";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
+import { AboutPage } from "./pages/AboutPage"
+import { EventsPage } from "./pages/EventsPage"
+import { StatsPage } from "./pages/StatsPage"
+import { Footer } from "../../ui-lib/src/Footer/Footer" 
+import { Header } from "../../ui-lib/src/Header/Header"
+import "./App.css"
 
 const NAVIGATION = [
   { label: "Карта событий", href: "/events" },
   { label: "Статистика", href: "/stats" },
   { label: "О проекте", href: "/about" },
-];
+]
 
 export default function App() {
   return (
@@ -31,5 +31,5 @@ export default function App() {
         <Footer />
       </div>
     </BrowserRouter>
-  );
+  )
 }

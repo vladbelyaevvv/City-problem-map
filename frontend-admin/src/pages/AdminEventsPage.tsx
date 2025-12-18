@@ -1,50 +1,52 @@
-import { useEffect, useState, useMemo } from "react";
-import { MapComponent } from "ui-lib";
-import { AdminEventList } from "../components/AdminEventList";
-import { AdminEventDetails } from "../components/AdminEventDetails";
-import { loadEvents, saveEvents, CityEvent, EventStatus } from "../utils/storage";
+import { useEffect, useState, useMemo } from "react"
+
+import { MapComponent } from "ui-lib"
+
+import { AdminEventDetails } from "../components/AdminEventDetails"
+import { AdminEventList } from "../components/AdminEventList"
+import { loadEvents, saveEvents, CityEvent, EventStatus } from "../utils/storage"
 
 const TYPE_COLORS = {
   water: "#3b82f6",
   heating: "#ef4444",
   electricity: "#eab308",
   other: "#9ca3af",
-};
+}
 
 export function AdminEventsPage() {
-  const [events, setEvents] = useState<CityEvent[]>([]);
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [events, setEvents] = useState<CityEvent[]>([])
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null)
 
   useEffect(() => {
-    setEvents(loadEvents()); // загрузка событий при старте
+    setEvents(loadEvents()) // загрузка событий при старте
 
-    const handleStorage = () => setEvents(loadEvents());
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
+    const handleStorage = () => setEvents(loadEvents())
+    window.addEventListener("storage", handleStorage)
+    return () => window.removeEventListener("storage", handleStorage)
+  }, [])
 
   const handleSelect = (id: string) => {
-    setSelectedEventId(id);
+    setSelectedEventId(id)
     setTimeout(() => {
-      const listItem = document.getElementById(`event-item-${id}`);
-      listItem?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  };
+      const listItem = document.getElementById(`event-item-${id}`)
+      listItem?.scrollIntoView({ behavior: "smooth", block: "center" })
+    }, 100)
+  }
 
   const handleDelete = (id: string) => {
     if (confirm("Удалить событие безвозвратно?")) {
-      const next = events.filter(e => e.id !== id);
-      setEvents(next);
-      saveEvents(next);
-      if (selectedEventId === id) setSelectedEventId(null);
+      const next = events.filter(e => e.id !== id)
+      setEvents(next)
+      saveEvents(next)
+      if (selectedEventId === id) setSelectedEventId(null)
     }
-  };
+  }
 
   const handleStatusChange = (id: string, newStatus: EventStatus) => {
-    const next = events.map(e => e.id === id ? { ...e, status: newStatus } : e);
-    setEvents(next);
-    saveEvents(next);
-  };
+    const next = events.map(e => e.id === id ? { ...e, status: newStatus } : e)
+    setEvents(next)
+    saveEvents(next)
+  }
 
   //маркеры для карты
   const markers = useMemo(() => {
@@ -54,14 +56,14 @@ export function AdminEventsPage() {
       position: e.position,
       title: `${e.title} (${e.status})`,
       color: selectedEventId === e.id 
-             ? "#000000" 
-             : (TYPE_COLORS[e.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.other)
+        ? "#000000" 
+        : (TYPE_COLORS[e.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.other)
     }))
-  }, [events, selectedEventId]);
+  }, [events, selectedEventId])
 
   const selectedEvent = useMemo(() => 
     events.find(e => e.id === selectedEventId), 
-  [events, selectedEventId]);
+  [events, selectedEventId])
 
   return (
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
@@ -98,9 +100,9 @@ export function AdminEventsPage() {
               onClose={() => setSelectedEventId(null)}
             />
           ) : (
-             <div style={{ padding: 10, background: "#e0f2fe", borderRadius: 8, color: "#0369a1", fontSize: "0.9em" }}>
+            <div style={{ padding: 10, background: "#e0f2fe", borderRadius: 8, color: "#0369a1", fontSize: "0.9em" }}>
               Выберите маркер на карте или событие в списке для редактирования.
-             </div>
+            </div>
           )}
 
           <AdminEventList 
@@ -119,5 +121,5 @@ export function AdminEventsPage() {
         }
       `}</style>
     </div>
-  );
+  )
 }

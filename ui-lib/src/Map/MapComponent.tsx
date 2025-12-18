@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+
 import { YMaps, Map, Placemark } from '@iminside/react-yandex-maps'
 
 export type LatLng = [number, number]
@@ -52,13 +53,13 @@ export function MapComponent(props: MapProps) {
     center: startPosition,
     zoom: zoom,
     controls: [] as string[] 
-  });
+  })
 
   const handleZoom = (delta: number) => {
-    setMapState(prev => ({ ...prev, zoom: prev.zoom + delta }));
-  };
+    setMapState(prev => ({ ...prev, zoom: prev.zoom + delta }))
+  }
   
-  const mapRef = useRef<YMapInstance | null>(null);
+  const mapRef = useRef<YMapInstance | null>(null)
 
   return (
     <div style={{ width, height, position: "relative", borderRadius: "12px", overflow: "hidden", border: "1px solid #e1e1e3" }}>
@@ -104,21 +105,21 @@ export function MapComponent(props: MapProps) {
           height="100%"
           
           instanceRef={(ref) => { 
-            if (ref) mapRef.current = ref as unknown as YMapInstance; 
+            if (ref) mapRef.current = ref as unknown as YMapInstance 
           }}
 
           onBoundsChange={(e: unknown) => {
-             const event = e as YMapEvent;
-             const newCenter = event.originalEvent.map.getCenter();
-             const newZoom = event.originalEvent.map.getZoom();
+            const event = e as YMapEvent
+            const newCenter = event.originalEvent.map.getCenter()
+            const newZoom = event.originalEvent.map.getZoom()
              
-             setMapState(prev => ({ ...prev, center: newCenter, zoom: newZoom }));
+            setMapState(prev => ({ ...prev, center: newCenter, zoom: newZoom }))
           }}
 
           onClick={(e: unknown) => {
-            const event = e as YMapEvent;
-            const coords = event.get("coords");
-            onMapClick?.(coords);
+            const event = e as YMapEvent
+            const coords = event.get("coords")
+            onMapClick?.(coords)
           }}
         >
           {markers.map((m) => (

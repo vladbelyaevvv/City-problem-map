@@ -1,13 +1,14 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Header, Footer } from "ui-lib";
-import { AdminEventsPage } from "./pages/AdminEventsPage";
-import { AdminStatsPage } from "./pages/AdminStatsPage";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { Header, Footer } from "ui-lib"
+
+import { AdminEventsPage } from "./pages/AdminEventsPage"
+import { AdminStatsPage } from "./pages/AdminStatsPage"
+import "./App.css"
 
 const ADMIN_NAV = [
   { label: "Карта и управление", href: "/admin/events" },
   { label: "Статистика", href: "/admin/stats" },
-];
+]
 
 export default function App() {
   return (
@@ -24,5 +25,5 @@ export default function App() {
         <Footer />
       </div>
     </BrowserRouter>
-  );
+  )
 }

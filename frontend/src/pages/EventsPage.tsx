@@ -1,30 +1,24 @@
-import { useEffect, useState } from "react"
-import { MapComponent, Button, Input, Card } from "ui-lib"
+import { useEffect, useState, useMemo } from "react"
+import { MapComponent, Button, Card } from "ui-lib"
 import type { CityEvent } from "../utils/storage"
 import { loadEvents, saveEvents } from "../utils/storage"
-// Обрати внимание: импорты Header и Footer удалены
+import { EventForm } from "../components/EventForm"
+import { EventList } from "../components/EventList"
 
 const TYPE_COLORS = {
-  water: "#3b82f6",       // Синий
-  heating: "#ef4444",     // Красный
-  electricity: "#eab308", // Желтый
-  other: "#9ca3af"        // Серый
-};
-
-const TYPE_LABELS = {
-  water: "Вода",
-  heating: "Отопление",
-  electricity: "Электричество",
-  other: "Другое"
+  water: "#3b82f6",       
+  heating: "#ef4444",     
+  electricity: "#eab308", 
+  other: "#9ca3af"        
 };
 
 export function EventsPage() {
   const [point, setPoint] = useState<[number, number] | null>(null)
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
+  
+  // Состояния для данных формы удалены отсюда, они теперь внутри EventForm
+  
   const [events, setEvents] = useState<CityEvent[]>([])
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [type, setType] = useState<CityEvent["type"]>("other")
   const [filterType, setFilterType] = useState<CityEvent["type"] | "all">("all")
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
@@ -34,34 +28,39 @@ export function EventsPage() {
   
   const handleEventSelect = (id: string) => {
     setSelectedEventId(id);
+    // Скролл к элементу списка
+    setTimeout(() => {
+       const listItem = document.getElementById(`event-item-${id}`);
+       listItem?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
   };
 
-  const filteredEvents = filterType === "all" ? events : events.filter((e) => e.type === filterType)
+  const filteredEvents = useMemo(() => {
+     return filterType === "all" ? events : events.filter((e) => e.type === filterType)
+  }, [filterType, events]);
 
-  const markers = filteredEvents.map((e) => ({
-    id: e.id,
-    type: e.type,
-    position: e.position,
-    title: e.title,
-    color: selectedEventId === e.id 
-           ? "#000000" // цвет выбранного маркера
-           : (TYPE_COLORS[e.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.other)
-  }))
+  const markers = useMemo(() => {
+    return filteredEvents.map((e) => ({
+      id: e.id,
+      type: e.type,
+      position: e.position,
+      title: e.title,
+      color: selectedEventId === e.id 
+             ? "#000000" // цвет выбранного маркера
+             : (TYPE_COLORS[e.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.other)
+    }))
+  }, [filteredEvents, selectedEventId]);
 
-  function handleSave() {
+  // Функция сохранения теперь принимает данные из формы
+  function handleSave(title: string, description: string, type: CityEvent["type"]) {
     if (!point) return
-
-    const trimmedTitle = title.trim()
-    const trimmedDescription = description.trim()
-
-    if (!trimmedTitle) return
 
     const newEvent: CityEvent = {
       id: crypto.randomUUID(),
-      title: trimmedTitle,
+      title: title,
       type: type,
       position: point,
-      description: trimmedDescription,
+      description: description,
       status: "new",
     }
 
@@ -71,9 +70,12 @@ export function EventsPage() {
     setEvents(next)
 
     setPoint(null)
-    setTitle("")
-    setDescription("")
     setIsFormOpen(false)
+  }
+
+  function handleCancel() {
+    setIsFormOpen(false)
+    setPoint(null)
   }
 
   return (
@@ -82,12 +84,11 @@ export function EventsPage() {
 
       <div style={{ height: 16 }} />
 
-      {/* Адаптивная сетка: на десктопе 2 колонки, на мобильном 1 */}
       <div
         className="events-grid"
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 350px", // Правая колонка фиксирована, левая занимает всё место
+          gridTemplateColumns: "1fr 350px", 
           gap: 20,
           alignItems: "start",
           height: "100%"
@@ -104,216 +105,65 @@ export function EventsPage() {
               setPoint(coords)
               setSelectedEventId(null);
             }}
-            onMarkerClick={(id) => {
-              const event = events.find(e => e.id === id);
-              if(event) {
-                handleEventSelect(event.id);
-                const listItem = document.getElementById(`event-item-${id}`);
-                listItem?.scrollIntoView({ behavior: "smooth", block: "center" });
-              }
-            }}
-            // Карта будет занимать 100% высоты контейнера, но не менее 500px
+            onMarkerClick={(id) => handleEventSelect(id)}
             height="100%" 
           />
         </div>
 
-        {/* Правая колонка — форма/фильтр/список */}
+        {/* Правая колонка */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <Button
-            variant="primary"
-            onClick={() => {
-              setIsFormOpen(true)
-              setPoint(null)
-            }}
-          >
-            Добавить событие
-          </Button>
           
+          {/* Кнопка добавления (если форма закрыта) */}
+          {!isFormOpen && (
+             <Button
+                variant="primary"
+                onClick={() => {
+                  setIsFormOpen(true)
+                  setPoint(null) // Сбрасываем точку, чтобы пользователь выбрал новую
+                }}
+              >
+                Добавить событие
+              </Button>
+          )}
+          
+          {/* Форма добавления */}
           {isFormOpen && (
-            <Card>
-              <h3>Новое событие</h3>
-
-              {!point && <p style={{color: "#e63946"}}>Кликни по карте, чтобы выбрать точку.</p>}
-
-              <p>Тип проблемы:</p>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Button
-                  variant={type === "water" ? "primary" : "secondary"}
-                  onClick={() => setType("water")}
-                >
-                  Вода
-                </Button>
-
-                <Button
-                  variant={type === "heating" ? "primary" : "secondary"}
-                  onClick={() => setType("heating")}
-                >
-                  Отопление
-                </Button>
-
-                <Button
-                  variant={type === "electricity" ? "primary" : "secondary"}
-                  onClick={() => setType("electricity")}
-                >
-                  Электричество
-                </Button>
-
-                <Button
-                  variant={type === "other" ? "primary" : "secondary"}
-                  onClick={() => setType("other")}
-                >
-                  Другое
-                </Button>
-              </div>
-
-              <div style={{ height: 12 }} />
-
-              <Input
-                value={title}
-                onChange={setTitle}
-                placeholder="Название проблемы"
-              />
-
-              <div style={{ height: 12 }} />
-
-              <Input
-                value={description}
-                onChange={setDescription}
-                placeholder="Описание проблемы"
-              />
-
-              <div style={{ height: 12 }} />
-
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Button variant="primary" onClick={handleSave}>
-                  Сохранить
-                </Button>
-
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    setIsFormOpen(false)
-                    setPoint(null)
-                    setTitle("")
-                    setDescription("")
-                  }}
-                >
-                  Отмена
-                </Button>
-              </div>
-            </Card>
+            <EventForm 
+                point={point}
+                onSave={handleSave}
+                onCancel={handleCancel}
+            />
           )}
 
+          {/* Фильтр */}
           <Card>
             <h3>Фильтр по типу</h3>
-
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <Button
-                variant={filterType === "all" ? "primary" : "secondary"}
-                onClick={() => setFilterType("all")}
-              >
-                Все
-              </Button>
-
-              <Button
-                variant={filterType === "water" ? "primary" : "secondary"}
-                onClick={() => setFilterType("water")}
-              >
-                Вода
-              </Button>
-
-              <Button
-                variant={filterType === "heating" ? "primary" : "secondary"}
-                onClick={() => setFilterType("heating")}
-              >
-                Отопление
-              </Button>
-
-              <Button
-                variant={filterType === "electricity" ? "primary" : "secondary"}
-                onClick={() => setFilterType("electricity")}
-              >
-                Электричество
-              </Button>
-
-              <Button
-                variant={filterType === "other" ? "primary" : "secondary"}
-                onClick={() => setFilterType("other")}
-              >
-                Другое
-              </Button>
+              {(["all", "water", "heating", "electricity", "other"] as const).map(ft => (
+                  <Button
+                    key={ft}
+                    variant={filterType === ft ? "primary" : "secondary"}
+                    onClick={() => setFilterType(ft)}
+                  >
+                    {ft === "all" ? "Все" : 
+                     ft === "water" ? "Вода" : 
+                     ft === "heating" ? "Отопление" : 
+                     ft === "electricity" ? "Электричество" : "Другое"}
+                  </Button>
+              ))}
             </div>
           </Card>
 
-          <Card
-            style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}
-          >
-            <h3>Список событий</h3>
-            <p style={{fontSize: "0.9em", color: "#666", marginBottom: 10}}>
-              Всего событий: {filteredEvents.length}
-            </p>
+          {/* Список */}
+          <EventList 
+            events={filteredEvents}
+            selectedEventId={selectedEventId}
+            onSelect={handleEventSelect}
+          />
 
-            {events.length === 0 ? (
-              <p>Событий пока нет.</p>
-            ) : (
-              <ul style={{ 
-                paddingLeft: 20, 
-                margin: 0,
-                overflowY: "auto", 
-                maxHeight: "400px", 
-                paddingRight: "10px" 
-              }}>
-                {filteredEvents.map((e) => (
-                  <li 
-                    key={e.id} 
-                    id={`event-item-${e.id}`}
-                    onClick={() => handleEventSelect(e.id)}
-                    style={{
-                      marginBottom: 12, 
-                      cursor: "pointer", 
-                      backgroundColor: selectedEventId === e.id ? "#f3f4f6" : "transparent",
-                      padding: "8px", 
-                      borderRadius: "8px", 
-                      border: selectedEventId === e.id ? "1px solid #3b82f6" : "1px solid transparent",
-                      transition: "all 0.2s"
-                    }}
-                    >
-                    <div style={{fontWeight: 600}}>{e.title}</div>
-                    
-                    <div style={{display: "flex", alignItems: "center", gap: 8, marginTop: 4}}>
-                       <span style={{
-                          display: "inline-block",
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          backgroundColor: TYPE_COLORS[e.type as keyof typeof TYPE_COLORS] || "#ccc"
-                       }} />
-                       
-                       <span style={{fontSize: "0.85em", color: "#555"}}>
-                         {TYPE_LABELS[e.type as keyof typeof TYPE_LABELS] || e.type}
-                       </span>
-
-                       <span style={{
-                         display: "inline-block",
-                         padding: "2px 6px",
-                         borderRadius: 4,
-                         fontSize: "0.75em",
-                         backgroundColor: e.status === "new" ? "#ffec99" : "#b2f2bb",
-                         color: "#1f2937",
-                         marginLeft: "auto" 
-                       }}>
-                         {e.status}
-                       </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
         </div>
       </div>
       
-      {/* Добавим стиль для медиа-запроса через тег style (или перенеси это в css файл) */}
       <style>{`
         @media (max-width: 900px) {
           .events-grid {

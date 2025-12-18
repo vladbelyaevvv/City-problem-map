@@ -1,23 +1,20 @@
-/* Главный контейнер на всю высоту */
 .app-root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Гарантирует высоту экрана */
+  min-height: 100vh; 
 }
 
-/* Область контента растягивается */
 .app-content {
   flex: 1; 
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1200px; /* Ограничение ширины для больших экранов */
-  margin: 0 auto;    /* Центрирование */
+  max-width: 1200px; 
+  margin: 0 auto;   
   padding: 20px;
   box-sizing: border-box;
 }
 
-/* Адаптив для мобильных */
 @media (max-width: 768px) {
   .app-content {
     padding: 10px;

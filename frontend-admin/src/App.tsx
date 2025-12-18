@@ -1,23 +1,28 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Header, Footer } from "ui-lib";
+import { AdminEventsPage } from "./pages/AdminEventsPage";
+import { AdminStatsPage } from "./pages/AdminStatsPage";
+import "./App.css";
 
-import { AdminEventsPage } from "./pages/AdminEventsPage"
-import { AdminStatsPage } from "./pages/AdminStatsPage"
+const ADMIN_NAV = [
+  { label: "Карта и управление", href: "/admin/events" },
+  { label: "Статистика", href: "/admin/stats" },
+];
 
 export default function App() {
   return (
     <BrowserRouter>
-      <div>
-        <nav style={{ marginBottom: 20 }}>
-          <Link to="/admin/events">События</Link> |{" "}
-          <Link to="/admin/stats">Статистика</Link>
-        </nav>
-
-        <Routes>
-          <Route path="/admin/events" element={<AdminEventsPage />} />
-          <Route path="/admin/stats" element={<AdminStatsPage />} />
-          <Route path="*" element={<AdminEventsPage />} />
-        </Routes>
+      <div className="app-root">
+        <Header title="City Problem  Map Admin" nav={ADMIN_NAV} />
+        <main className="app-content">
+          <Routes>
+            <Route path="/admin/events" element={<AdminEventsPage />} />
+            <Route path="/admin/stats" element={<AdminStatsPage />} />
+            <Route path="*" element={<AdminEventsPage />} />
+          </Routes>
+        </main>
+        <Footer />
       </div>
     </BrowserRouter>
-  )
+  );
 }

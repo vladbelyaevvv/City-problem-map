@@ -32,7 +32,7 @@ export function EventsPage() {
     setEvents(loadEvents())
   }, [])
   
-  const handleEventSelect = (id: string, position : [number, number]) => {
+  const handleEventSelect = (id: string) => {
     setSelectedEventId(id);
   };
 
@@ -107,7 +107,7 @@ export function EventsPage() {
             onMarkerClick={(id) => {
               const event = events.find(e => e.id === id);
               if(event) {
-                handleEventSelect(event.id, event.position);
+                handleEventSelect(event.id);
                 const listItem = document.getElementById(`event-item-${id}`);
                 listItem?.scrollIntoView({ behavior: "smooth", block: "center" });
               }
@@ -267,7 +267,7 @@ export function EventsPage() {
                   <li 
                     key={e.id} 
                     id={`event-item-${e.id}`}
-                    onClick={() => handleEventSelect(e.id, e.position as [number, number])}
+                    onClick={() => handleEventSelect(e.id)}
                     style={{
                       marginBottom: 12, 
                       cursor: "pointer", 

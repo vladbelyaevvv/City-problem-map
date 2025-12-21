@@ -9,6 +9,7 @@ export interface CardProps {
 
 export function Card(props: CardProps){
   const { children, className, style } = props
+
   return (
     <div 
       className={`card ${className ?? ""}`} 

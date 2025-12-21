@@ -21,7 +21,9 @@ export function AdminEventsPage() {
     setEvents(loadEvents()) // загрузка событий при старте
 
     const handleStorage = () => setEvents(loadEvents())
+
     window.addEventListener("storage", handleStorage)
+
     return () => window.removeEventListener("storage", handleStorage)
   }, [])
 
@@ -29,6 +31,7 @@ export function AdminEventsPage() {
     setSelectedEventId(id)
     setTimeout(() => {
       const listItem = document.getElementById(`event-item-${id}`)
+
       listItem?.scrollIntoView({ behavior: "smooth", block: "center" })
     }, 100)
   }
@@ -36,6 +39,7 @@ export function AdminEventsPage() {
   const handleDelete = (id: string) => {
     if (confirm("Удалить событие безвозвратно?")) {
       const next = events.filter(e => e.id !== id)
+
       setEvents(next)
       saveEvents(next)
       if (selectedEventId === id) setSelectedEventId(null)
@@ -44,6 +48,7 @@ export function AdminEventsPage() {
 
   const handleStatusChange = (id: string, newStatus: EventStatus) => {
     const next = events.map(e => e.id === id ? { ...e, status: newStatus } : e)
+
     setEvents(next)
     saveEvents(next)
   }

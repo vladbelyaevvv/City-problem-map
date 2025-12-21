@@ -20,6 +20,7 @@ export function loadEvents(): CityEvent[] {
 
   try {
     const parsed = JSON.parse(raw)
+
     if(Array.isArray(parsed)) {
       return parsed as CityEvent[]
     }

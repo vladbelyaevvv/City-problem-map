@@ -10,6 +10,7 @@ describe('Button', () => {
 
   test('calls onClick when clicked', () => {
     const handleClick = jest.fn()
+
     render(<Button onClick={handleClick}>Click me</Button>)
 
     fireEvent.click(screen.getByText('Click me'))
@@ -23,22 +24,26 @@ describe('Button', () => {
 
   test('applies correct variant class', () => {
     const { container } = render(<Button variant="secondary">Click me</Button>)
+
     expect(container.firstChild).toHaveClass('btn-secondary')
   })
 
   test('applies custom className', () => {
     const { container } = render(<Button className="custom-class">Click me</Button>)
+
     expect(container.firstChild).toHaveClass('custom-class')
   })
 
   test('renders with primary variant by default', () => {
     const { container } = render(<Button>Click me</Button>)
+
     expect(container.firstChild).toHaveClass('btn-primary')
   })
 
   test('passes through other props to button element', () => {
     render(<Button type="submit" data-testid="submit-btn">Submit</Button>)
     const button = screen.getByTestId('submit-btn')
+
     expect(button).toHaveAttribute('type', 'submit')
   })
 })

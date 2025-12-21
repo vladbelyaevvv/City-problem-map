@@ -34,6 +34,7 @@ export function EventsPage() {
     // Скролл к элементу списка
     setTimeout(() => {
       const listItem = document.getElementById(`event-item-${id}`)
+
       listItem?.scrollIntoView({ behavior: "smooth", block: "center" })
     }, 100)
   }

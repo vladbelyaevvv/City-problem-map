@@ -119,6 +119,7 @@ export function MapComponent(props: MapProps) {
           onClick={(e: unknown) => {
             const event = e as YMapEvent
             const coords = event.get("coords")
+
             onMapClick?.(coords)
           }}
         >

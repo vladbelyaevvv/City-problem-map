@@ -1,79 +1,103 @@
 import js from '@eslint/js'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import importPlugin from 'eslint-plugin-import'
 import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
 import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules']),
+  globalIgnores(['dist']),
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
-
-    languageOptions: {
-      parser: tsParser,
-      ecmaVersion: 2020,
-      sourceType: 'module',
-      globals: {
-        ...globals.browser,
-        ...globals.jest
-      },
-      parserOptions: {
-        ecmaFeatures: { jsx: true }
-      }
-    },
-
     extends: [
-      js.configs.recommended
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
     ],
-
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
     plugins: {
       '@typescript-eslint': typescriptEslint,
-      import: importPlugin,
-      react
+      'react': react,
+      'import': importPlugin,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh
     },
-
-    settings: {
-      react: { version: 'detect' }
-    },
-
+  }, {
     rules: {
-      indent: ['error', 2],
-      semi: ['error', 'never'],
-
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off',
-      'react/jsx-uses-vars': 'error',
-
+      "indent": ["error", 2],
+      'semi': ['error', 'never'],// Правильный порядок импортов
       'import/order': ['error', {
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'index',
-          'object',
-          'type'
+        'groups': [
+          'builtin',    // Встроенные модули (path, fs и т.д.)
+          'external',   // Внешние зависимости (react, lodash и т.д.)
+          'internal',   // Внутренние модули (алиасы и т.д.)
+          ['parent', 'sibling'], // Родительские и соседние директории
+          'index',      // index файлы
+          'object',     // Object imports
+          'type'        // Type imports
         ],
-        pathGroups: [
-          { pattern: 'react', group: 'external', position: 'before' },
-          { pattern: '@/**', group: 'internal' }
+        'pathGroups': [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before'
+          },
+          {
+            pattern: '@/**',
+            group: 'internal'
+          }
         ],
-        pathGroupsExcludedImportTypes: ['react'],
+        'pathGroupsExcludedImportTypes': ['react'],
         'newlines-between': 'always',
-        alphabetize: { order: 'asc', caseInsensitive: true }
-      }],
-
-      'no-unused-vars': 'off', // используем TS версию
-      '@typescript-eslint/no-unused-vars': ['error'],
-
+        'alphabetize': {
+          order: 'asc',
+          caseInsensitive: true
+        },
+        
+      }],    
+      // правила для хуков React  
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      // Правило для React Refresh (Vite HMR)
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true }
+      ],
+      // Запрет лишних переносов
       'no-multiple-empty-lines': ['error', {
-        max: 1, maxEOF: 0, maxBOF: 0
+        max: 1,        // максимум 1 пустая строка подряд
+        maxEOF: 0,     // не допускать пустых строк в конце файла
+        maxBOF: 0      // не допускать пустых строк в начале файла
       }],
-      'padded-blocks': ['error', 'never'],
-
-      '@typescript-eslint/no-explicit-any': 'error'
-    }
-  }
+      'padded-blocks': ['error', 'never'], // запрет пустых строк в начале/конце блоков
+      'lines-between-class-members': ['error', 'always', {
+        exceptAfterSingleLine: true // разрешить без пустой строки после однострочных членов класса
+      }],
+      'padding-line-between-statements': [
+        'error',
+        // Пустая строка перед return
+        { blankLine: 'always', prev: '*', next: 'return' },
+        // Пустая строка перед блоками
+        { blankLine: 'always', prev: '*', next: ['block', 'block-like'] },
+        // Пустая строка между объявлениями переменных и следующим кодом
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+        // Пустая строка между импортами и следующим кодом
+        { blankLine: 'always', prev: 'import', next: '*' },
+        { blankLine: 'any', prev: 'import', next: 'import' },
+        // Пустая строка между экспортами и следующим кодом
+        { blankLine: 'always', prev: 'export', next: '*' },
+        { blankLine: 'any', prev: 'export', next: 'export' },
+        // Пустая строка между функциями
+        { blankLine: 'always', prev: 'function', next: 'function' },
+        // Пустая строка между классами
+        { blankLine: 'always', prev: 'class', next: 'class' }
+      ],
+    },
+  },
 ])

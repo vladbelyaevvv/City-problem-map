@@ -26,6 +26,7 @@ export function AdminStatsPage() {
     return events.reduce<TypeStats>(
       (acc, event) => {
         acc[event.type] += 1
+
         return acc
       }, 
       {water: 0, heating: 0, electricity: 0, other: 0}
@@ -36,6 +37,7 @@ export function AdminStatsPage() {
     return events.reduce<Record<string, number>>(
       (acc, event) => {
         acc[event.status] = (acc[event.status] || 0) + 1
+
         return acc
       },
       {}

@@ -1,0 +1,43 @@
+.header {
+    position: sticky; /* Фиксирует шапку при скролле */
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.85); /* Полупрозрачность */
+    backdrop-filter: blur(10px); /* Эффект размытия фона */
+    border-bottom: 1px solid #e1e1e3;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 60px; /* Фиксированная высота */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    cursor: pointer;
+}
+
+.header-nav {
+    display: flex;
+    gap: 20px;
+}
+
+.header-link {
+    font-size: 15px;
+    font-weight: 500;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.header-link:hover {
+    color: #007aff; /* Цвет при наведении */
+}

@@ -1,0 +1,46 @@
+# --- Node ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Local env files ---
+.env
+.env.*
+!.env.example
+
+# --- Logs ---
+logs/
+*.log
+*.log.*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Dist / Build output ---
+dist/
+build/
+out/
+public/build/
+
+# --- Vite cache ---
+.vite/
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+# --- TypeScript ---
+*.tsbuildinfo
+
+# --- Mac / System ---
+.DS_Store
+Thumbs.db
+
+# --- Editor folders ---
+.vscode/
+.idea/
+*.swp
+
+# --- Coverage ---
+coverage/
+
+# --- Misc ---
+*.local

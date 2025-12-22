@@ -17,9 +17,6 @@ const TYPE_COLORS = {
 
 export function EventsPage() {
   const [point, setPoint] = useState<[number, number] | null>(null)
-  
-  // Состояния для данных формы удалены отсюда, они теперь внутри EventForm
-  
   const [events, setEvents] = useState<CityEvent[]>([])
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [filterType, setFilterType] = useState<CityEvent["type"] | "all">("all")
@@ -31,7 +28,6 @@ export function EventsPage() {
   
   const handleEventSelect = (id: string) => {
     setSelectedEventId(id)
-    // Скролл к элементу списка
     setTimeout(() => {
       const listItem = document.getElementById(`event-item-${id}`)
 
@@ -55,7 +51,6 @@ export function EventsPage() {
     }))
   }, [filteredEvents, selectedEventId])
 
-  // Функция сохранения теперь принимает данные из формы
   function handleSave(title: string, description: string, type: CityEvent["type"]) {
     if (!point) return
 
